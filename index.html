@@ -1,674 +1,853 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Editor Application</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Editor Application</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <style>
+    /* --- reset & base --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f9fafc;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f9fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-        .form-card {
-            max-width: 720px;
-            width: 100%;
-            background: white;
-            border-radius: 32px;
-            padding: 40px 36px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.06), 0 8px 24px -6px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s ease;
-        }
+    .form-card {
+      max-width: 720px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      padding: 40px 36px;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.06), 0 8px 24px -6px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s ease;
+      position: relative;
+    }
 
-        .progress-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 36px;
-            gap: 6px;
-        }
+    /* progress */
+    .progress-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 36px;
+      gap: 6px;
+    }
 
-        .step-indicator {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #a0aec0;
-            letter-spacing: 0.01em;
-            transition: color 0.2s;
-        }
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #a0aec0;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
 
-        .step-indicator.active {
-            color: #1a202c;
-        }
+    .step-indicator.active {
+      color: #1a202c;
+    }
 
-        .step-indicator .step-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 60px;
-            background: #edf2f7;
-            color: #4a5568;
-            font-weight: 600;
-            font-size: 0.8rem;
-            transition: 0.2s;
-        }
+    .step-indicator .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 60px;
+      background: #edf2f7;
+      color: #4a5568;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: 0.2s;
+    }
 
-        .step-indicator.active .step-number {
-            background: #2463eb;
-            color: white;
-        }
+    .step-indicator.active .step-number {
+      background: #2463eb;
+      color: white;
+    }
 
-        .step-line {
-            flex: 1;
-            height: 2px;
-            background: #e2e8f0;
-            margin: 0 6px;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
+    .step-line {
+      flex: 1;
+      height: 2px;
+      background: #e2e8f0;
+      margin: 0 6px;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
 
-        .step-line.filled {
-            background: #2463eb;
-        }
+    .step-line.filled {
+      background: #2463eb;
+    }
 
-        .page {
-            display: block;
-            animation: fadeSlide 0.2s ease;
-        }
+    /* pages */
+    .page {
+      display: block;
+      animation: fadeSlide 0.2s ease;
+    }
 
-        .page.hidden {
-            display: none;
-        }
+    .page.hidden {
+      display: none;
+    }
 
-        @keyframes fadeSlide {
-            0% { opacity: 0.6; transform: translateY(6px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
+    @keyframes fadeSlide {
+      0% { opacity: 0.6; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
 
-        h2 {
-            font-size: 1.9rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            color: #0b1a33;
-            margin-bottom: 6px;
-        }
+    h2 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #0b1a33;
+      margin-bottom: 6px;
+    }
 
-        .subhead {
-            color: #5a6a7e;
-            font-size: 1rem;
-            font-weight: 400;
-            margin-bottom: 28px;
-        }
+    .subhead {
+      color: #5a6a7e;
+      font-size: 1rem;
+      font-weight: 400;
+      margin-bottom: 28px;
+    }
 
-        .field-group {
-            margin-bottom: 22px;
-        }
+    .field-group {
+      margin-bottom: 22px;
+    }
 
-        label {
-            display: block;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #1e293b;
+      margin-bottom: 5px;
+    }
 
-        label .required {
-            color: #e53e3e;
-            margin-left: 2px;
-        }
+    label .required {
+      color: #e53e3e;
+      margin-left: 2px;
+    }
 
-        label .optional-tag {
-            font-weight: 400;
-            color: #7a8a9e;
-            font-size: 0.8rem;
-            margin-left: 6px;
-        }
+    label .optional-tag {
+      font-weight: 400;
+      color: #7a8a9e;
+      font-size: 0.8rem;
+      margin-left: 6px;
+    }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 1rem;
-            border: 1.5px solid #e9edf2;
-            border-radius: 16px;
-            background: white;
-            transition: 0.2s;
-            font-family: 'Inter', sans-serif;
-            color: #0b1a33;
-        }
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: 1.5px solid #e9edf2;
+      border-radius: 16px;
+      background: white;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+      color: #0b1a33;
+    }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #2463eb;
-            box-shadow: 0 0 0 3px rgba(36, 99, 235, 0.12);
-        }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #2463eb;
+      box-shadow: 0 0 0 3px rgba(36, 99, 235, 0.12);
+    }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
 
-        .checkbox-grid, .card-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 4px;
-        }
+    .checkbox-grid, .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
+    }
 
-        .card-option {
-            background: #f8fafc;
-            border: 1.5px solid #e9edf2;
-            border-radius: 20px;
-            padding: 12px 20px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.15s;
-            color: #1e293b;
-            flex: 1 0 auto;
-            text-align: center;
-            min-width: 80px;
-        }
+    .card-option {
+      background: #f8fafc;
+      border: 1.5px solid #e9edf2;
+      border-radius: 20px;
+      padding: 12px 20px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #1e293b;
+      flex: 1 0 auto;
+      text-align: center;
+      min-width: 80px;
+    }
 
-        .card-option:hover {
-            background: #edf2f7;
-        }
+    .card-option:hover {
+      background: #edf2f7;
+    }
 
-        .card-option.selected {
-            background: #ebf2fe;
-            border-color: #2463eb;
-            color: #2463eb;
-            box-shadow: 0 0 0 1px #2463eb;
-        }
+    .card-option.selected {
+      background: #ebf2fe;
+      border-color: #2463eb;
+      color: #2463eb;
+      box-shadow: 0 0 0 1px #2463eb;
+    }
 
-        .card-option input[type="radio"],
-        .card-option input[type="checkbox"] {
-            display: none;
-        }
+    .card-option input[type="radio"],
+    .card-option input[type="checkbox"] {
+      display: none;
+    }
 
-        .inline-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8fafc;
-            padding: 8px 16px 8px 12px;
-            border-radius: 40px;
-            border: 1.5px solid #e9edf2;
-            cursor: pointer;
-            transition: 0.15s;
-            font-weight: 450;
-        }
+    .inline-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      padding: 8px 16px 8px 12px;
+      border-radius: 40px;
+      border: 1.5px solid #e9edf2;
+      cursor: pointer;
+      transition: 0.15s;
+      font-weight: 450;
+    }
 
-        .inline-check input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #2463eb;
-            margin: 0;
-            cursor: pointer;
-        }
+    .inline-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #2463eb;
+      margin: 0;
+      cursor: pointer;
+    }
 
-        .inline-check.selected {
-            background: #ebf2fe;
-            border-color: #2463eb;
-        }
+    .inline-check.selected {
+      background: #ebf2fe;
+      border-color: #2463eb;
+    }
 
-        .inline-check .check-label {
-            font-size: 0.9rem;
-        }
+    .inline-check .check-label {
+      font-size: 0.9rem;
+    }
 
-        .action-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 16px;
-            margin-top: 36px;
-            flex-wrap: wrap;
-        }
+    .action-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+    }
 
-        .btn {
-            border: none;
-            background: #f1f4f9;
-            padding: 14px 28px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.15s;
-            color: #1a202c;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Inter', sans-serif;
-        }
+    .btn {
+      border: none;
+      background: #f1f4f9;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s;
+      color: #1a202c;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
 
-        .btn-primary {
-            background: #2463eb;
-            color: white;
-            box-shadow: 0 4px 8px -2px rgba(36, 99, 235, 0.25);
-        }
+    .btn-primary {
+      background: #2463eb;
+      color: white;
+      box-shadow: 0 4px 8px -2px rgba(36, 99, 235, 0.25);
+    }
 
-        .btn-primary:hover {
-            background: #1b4fc4;
-            transform: translateY(-1px);
-        }
+    .btn-primary:hover {
+      background: #1b4fc4;
+      transform: translateY(-1px);
+    }
 
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
 
-        .btn-large {
-            padding: 16px 44px;
-            font-size: 1.1rem;
-        }
+    .btn-large {
+      padding: 16px 44px;
+      font-size: 1.1rem;
+    }
 
-        .error-message {
-            color: #e53e3e;
-            font-size: 0.85rem;
-            margin-top: 6px;
-        }
+    .error-message {
+      color: #e53e3e;
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
 
-        .success-page {
-            text-align: center;
-            padding: 20px 0 10px;
-        }
+    .success-page {
+      text-align: center;
+      padding: 20px 0 10px;
+    }
 
-        .success-page h2 {
-            font-size: 2.2rem;
-            margin-bottom: 12px;
-        }
+    .success-page h2 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
 
-        .success-page p {
-            color: #4a5a72;
-            font-size: 1.1rem;
-            max-width: 400px;
-            margin: 0 auto 30px;
-            line-height: 1.5;
-        }
+    .success-page p {
+      color: #4a5a72;
+      font-size: 1.1rem;
+      max-width: 400px;
+      margin: 0 auto 30px;
+      line-height: 1.5;
+    }
 
-        .hidden {
-            display: none !important;
-        }
+    .hidden {
+      display: none !important;
+    }
 
-        @media (max-width: 600px) {
-            .form-card {
-                padding: 24px 18px;
-                border-radius: 24px;
-            }
-            .step-indicator span:not(.step-number) {
-                display: none;
-            }
-            .action-row {
-                flex-direction: column;
-            }
-            .action-row .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            h2 {
-                font-size: 1.6rem;
-            }
-        }
-    </style>
+    /* --- footer links --- */
+    .footer-links {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #edf2f7;
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      font-size: 0.9rem;
+    }
+
+    .footer-links a {
+      color: #4a5a72;
+      text-decoration: none;
+      font-weight: 450;
+      transition: color 0.15s;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+    }
+
+    .footer-links a:hover {
+      color: #2463eb;
+      border-bottom-color: #2463eb;
+    }
+
+    /* --- overlay page (info pages) --- */
+    .info-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .info-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .info-card {
+      background: white;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 32px;
+      padding: 40px 36px;
+      box-shadow: 0 40px 60px -20px rgba(0, 0, 0, 0.25);
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .info-card h2 {
+      margin-bottom: 16px;
+      font-size: 1.8rem;
+    }
+
+    .info-card p {
+      color: #2d3a4f;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .info-card .close-btn {
+      position: sticky;
+      top: 0;
+      float: right;
+      background: #f1f4f9;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      font-size: 1.4rem;
+      font-weight: 300;
+      cursor: pointer;
+      color: #1a202c;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .info-card .close-btn:hover {
+      background: #e2e8f0;
+    }
+
+    @media (max-width: 600px) {
+      .form-card {
+        padding: 24px 18px;
+        border-radius: 24px;
+      }
+      .step-indicator span:not(.step-number) {
+        display: none;
+      }
+      .action-row {
+        flex-direction: column;
+      }
+      .action-row .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      h2 {
+        font-size: 1.6rem;
+      }
+      .footer-links {
+        gap: 16px;
+        font-size: 0.8rem;
+      }
+      .info-card {
+        padding: 28px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
+
 <div class="form-card" id="app">
-    <!-- progress -->
-    <div class="progress-wrapper">
-        <div class="step-indicator active" data-step="1">
-            <span class="step-number">1</span>
-            <span>Personal</span>
-        </div>
-        <div class="step-line filled" id="line1"></div>
-        <div class="step-indicator" data-step="2">
-            <span class="step-number">2</span>
-            <span>Work</span>
-        </div>
-        <div class="step-line" id="line2"></div>
-        <div class="step-indicator" data-step="3">
-            <span class="step-number">3</span>
-            <span>Final</span>
-        </div>
+  <!-- progress -->
+  <div class="progress-wrapper">
+    <div class="step-indicator active" data-step="1">
+      <span class="step-number">1</span>
+      <span>Personal</span>
+    </div>
+    <div class="step-line filled" id="line1"></div>
+    <div class="step-indicator" data-step="2">
+      <span class="step-number">2</span>
+      <span>Work</span>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-indicator" data-step="3">
+      <span class="step-number">3</span>
+      <span>Final</span>
+    </div>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div id="page1" class="page">
+    <h2>Let's Get Started</h2>
+    <div class="subhead">Please enter your basic information.</div>
+
+    <div class="field-group">
+      <label>Full Name <span class="required">*</span></label>
+      <input type="text" id="fullName" placeholder="e.g. Alex Rivera" />
+      <div id="nameError" class="error-message"></div>
     </div>
 
-    <!-- PAGE 1 — PERSONAL INFO -->
-    <div id="page1" class="page">
-        <h2>Let's Get Started</h2>
-        <div class="subhead">Please enter your basic information.</div>
-
-        <div class="field-group">
-            <label>Full Name <span class="required">*</span></label>
-            <input type="text" id="fullName" placeholder="e.g. Alex Rivera" />
-            <div id="nameError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>Email Address <span class="required">*</span></label>
-            <input type="email" id="email" placeholder="alex@example.com" />
-            <div id="emailError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>WhatsApp Number <span class="optional-tag">(optional)</span></label>
-            <input type="tel" id="whatsapp" placeholder="+1 234 567 890" />
-            <div id="whatsappError" class="error-message"></div>
-        </div>
-
-        <div class="action-row">
-            <div></div>
-            <button class="btn btn-primary" id="toPage2">Next →</button>
-        </div>
+    <div class="field-group">
+      <label>Email Address <span class="required">*</span></label>
+      <input type="email" id="email" placeholder="alex@example.com" />
+      <div id="emailError" class="error-message"></div>
     </div>
 
-    <!-- PAGE 2 — WORK & EXPERIENCE -->
-    <div id="page2" class="page hidden">
-        <h2>Tell Us About Your Work</h2>
-        <div class="subhead">Help us understand your editing experience and setup.</div>
-
-        <div class="field-group">
-            <label>Portfolio <span class="optional-tag">(optional)</span></label>
-            <input type="url" id="portfolio" placeholder="Paste your portfolio link here" />
-            <div style="font-size:0.8rem; color:#6b7a8e; margin-top:6px;">Google Drive · YouTube · Behance · Vimeo · Personal Website</div>
-            <div id="portfolioError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>Experience Level <span class="required">*</span></label>
-            <div class="card-grid" id="experienceGroup">
-                <div class="card-option" data-value="Beginner">Beginner</div>
-                <div class="card-option" data-value="Intermediate">Intermediate</div>
-                <div class="card-option" data-value="Professional">Professional</div>
-                <div class="card-option" data-value="Expert">Expert</div>
-            </div>
-            <div id="experienceError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>Work Type <span class="required">*</span></label>
-            <div class="card-grid" id="workTypeGroup">
-                <div class="card-option" data-value="Full Time">Full Time</div>
-                <div class="card-option" data-value="Part Time">Part Time</div>
-            </div>
-            <div id="workTypeError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>Editing Device <span class="required">*</span></label>
-            <div class="card-grid" id="deviceGroup">
-                <div class="card-option" data-value="Laptop">Laptop</div>
-                <div class="card-option" data-value="Desktop PC">Desktop PC</div>
-                <div class="card-option" data-value="Both">Both</div>
-            </div>
-            <div id="deviceError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>Video Editing Software <span class="required">*</span></label>
-            <div class="card-grid" id="softwareGroup">
-                <div class="card-option" data-value="Adobe Premiere Pro">Adobe Premiere Pro</div>
-                <div class="card-option" data-value="After Effects">After Effects</div>
-                <div class="card-option" data-value="DaVinci Resolve">DaVinci Resolve</div>
-                <div class="card-option" data-value="CapCut">CapCut</div>
-                <div class="card-option" data-value="Final Cut Pro">Final Cut Pro</div>
-                <div class="card-option" data-value="Other">Other</div>
-            </div>
-            <div id="softwareError" class="error-message"></div>
-        </div>
-
-        <div class="action-row">
-            <button class="btn btn-secondary" id="backToPage1">← Back</button>
-            <button class="btn btn-primary" id="toPage3">Next →</button>
-        </div>
+    <div class="field-group">
+      <label>WhatsApp Number <span class="optional-tag">(optional)</span></label>
+      <input type="tel" id="whatsapp" placeholder="+1 234 567 890" />
+      <div id="whatsappError" class="error-message"></div>
     </div>
 
-    <!-- PAGE 3 — FINAL DETAILS -->
-    <div id="page3" class="page hidden">
-        <h2>Almost Done!</h2>
-        <div class="subhead">Just a few final details.</div>
-
-        <div class="field-group">
-            <label>Which type of videos can you edit? <span class="required">*</span></label>
-            <div class="checkbox-grid" id="videoTypesGroup">
-                <span class="inline-check"><input type="checkbox" value="YouTube Videos" /> <span class="check-label">YouTube Videos</span></span>
-                <span class="inline-check"><input type="checkbox" value="YouTube Shorts" /> <span class="check-label">YouTube Shorts</span></span>
-                <span class="inline-check"><input type="checkbox" value="Instagram Reels" /> <span class="check-label">Instagram Reels</span></span>
-                <span class="inline-check"><input type="checkbox" value="TikTok Videos" /> <span class="check-label">TikTok Videos</span></span>
-                <span class="inline-check"><input type="checkbox" value="Ads" /> <span class="check-label">Ads</span></span>
-                <span class="inline-check"><input type="checkbox" value="Gaming Videos" /> <span class="check-label">Gaming Videos</span></span>
-                <span class="inline-check"><input type="checkbox" value="Podcast Videos" /> <span class="check-label">Podcast Videos</span></span>
-                <span class="inline-check"><input type="checkbox" value="Other" /> <span class="check-label">Other</span></span>
-            </div>
-            <div id="videoTypesError" class="error-message"></div>
-        </div>
-
-        <div class="field-group">
-            <label>How many videos can you edit per week?</label>
-            <div class="card-grid" id="weeklyGroup">
-                <div class="card-option" data-value="1–5">1–5</div>
-                <div class="card-option" data-value="5–10">5–10</div>
-                <div class="card-option" data-value="10–20">10–20</div>
-                <div class="card-option" data-value="20+">20+</div>
-            </div>
-        </div>
-
-        <div class="field-group">
-            <label>When can you start?</label>
-            <div class="card-grid" id="startGroup">
-                <div class="card-option" data-value="Immediately">Immediately</div>
-                <div class="card-option" data-value="Within 3 Days">Within 3 Days</div>
-                <div class="card-option" data-value="Within 1 Week">Within 1 Week</div>
-                <div class="card-option" data-value="Other">Other</div>
-            </div>
-        </div>
-
-        <div class="field-group">
-            <label>Tell us anything else about yourself <span class="optional-tag">(optional)</span></label>
-            <textarea id="aboutYou" placeholder="Write anything you would like us to know..."></textarea>
-        </div>
-
-        <div class="action-row">
-            <button class="btn btn-secondary" id="backToPage2">← Back</button>
-            <button class="btn btn-primary btn-large" id="submitApplication">Submit Application →</button>
-        </div>
+    <div class="action-row">
+      <div></div>
+      <button class="btn btn-primary" id="toPage2">Next →</button>
     </div>
 
-    <!-- SUCCESS -->
-    <div id="successPage" class="page hidden success-page">
-        <h2>Application Submitted Successfully! 🎉</h2>
-        <p>Thank you for applying. We have received your information and will review your application.</p>
-        <button class="btn btn-primary" id="doneButton">Done</button>
+    <!-- footer links -->
+    <div class="footer-links">
+      <a data-info="about">About Us</a>
+      <a data-info="privacy">Privacy Policy</a>
+      <a data-info="terms">Terms &amp; Conditions</a>
     </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div id="page2" class="page hidden">
+    <h2>Tell Us About Your Work</h2>
+    <div class="subhead">Help us understand your editing experience and setup.</div>
+
+    <div class="field-group">
+      <label>Portfolio <span class="optional-tag">(optional)</span></label>
+      <input type="url" id="portfolio" placeholder="Paste your portfolio link here" />
+      <div style="font-size:0.8rem; color:#6b7a8e; margin-top:6px;">Google Drive · YouTube · Behance · Vimeo · Personal Website</div>
+      <div id="portfolioError" class="error-message"></div>
+    </div>
+
+    <div class="field-group">
+      <label>Experience Level <span class="required">*</span></label>
+      <div class="card-grid" id="experienceGroup">
+        <div class="card-option" data-value="Beginner">Beginner</div>
+        <div class="card-option" data-value="Intermediate">Intermediate</div>
+        <div class="card-option" data-value="Professional">Professional</div>
+        <div class="card-option" data-value="Expert">Expert</div>
+      </div>
+      <div id="experienceError" class="error-message"></div>
+    </div>
+
+    <div class="field-group">
+      <label>Work Type <span class="required">*</span></label>
+      <div class="card-grid" id="workTypeGroup">
+        <div class="card-option" data-value="Full Time">Full Time</div>
+        <div class="card-option" data-value="Part Time">Part Time</div>
+      </div>
+      <div id="workTypeError" class="error-message"></div>
+    </div>
+
+    <div class="field-group">
+      <label>Editing Device <span class="required">*</span></label>
+      <div class="card-grid" id="deviceGroup">
+        <div class="card-option" data-value="Laptop">Laptop</div>
+        <div class="card-option" data-value="Desktop PC">Desktop PC</div>
+        <div class="card-option" data-value="Both">Both</div>
+      </div>
+      <div id="deviceError" class="error-message"></div>
+    </div>
+
+    <div class="field-group">
+      <label>Video Editing Software <span class="required">*</span></label>
+      <div class="card-grid" id="softwareGroup">
+        <div class="card-option" data-value="Adobe Premiere Pro">Adobe Premiere Pro</div>
+        <div class="card-option" data-value="After Effects">After Effects</div>
+        <div class="card-option" data-value="DaVinci Resolve">DaVinci Resolve</div>
+        <div class="card-option" data-value="CapCut">CapCut</div>
+        <div class="card-option" data-value="Final Cut Pro">Final Cut Pro</div>
+        <div class="card-option" data-value="Other">Other</div>
+      </div>
+      <div id="softwareError" class="error-message"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-secondary" id="backToPage1">← Back</button>
+      <button class="btn btn-primary" id="toPage3">Next →</button>
+    </div>
+
+    <div class="footer-links">
+      <a data-info="about">About Us</a>
+      <a data-info="privacy">Privacy Policy</a>
+      <a data-info="terms">Terms &amp; Conditions</a>
+    </div>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div id="page3" class="page hidden">
+    <h2>Almost Done!</h2>
+    <div class="subhead">Just a few final details.</div>
+
+    <div class="field-group">
+      <label>Which type of videos can you edit? <span class="required">*</span></label>
+      <div class="checkbox-grid" id="videoTypesGroup">
+        <span class="inline-check"><input type="checkbox" value="YouTube Videos" /> <span class="check-label">YouTube Videos</span></span>
+        <span class="inline-check"><input type="checkbox" value="YouTube Shorts" /> <span class="check-label">YouTube Shorts</span></span>
+        <span class="inline-check"><input type="checkbox" value="Instagram Reels" /> <span class="check-label">Instagram Reels</span></span>
+        <span class="inline-check"><input type="checkbox" value="TikTok Videos" /> <span class="check-label">TikTok Videos</span></span>
+        <span class="inline-check"><input type="checkbox" value="Ads" /> <span class="check-label">Ads</span></span>
+        <span class="inline-check"><input type="checkbox" value="Gaming Videos" /> <span class="check-label">Gaming Videos</span></span>
+        <span class="inline-check"><input type="checkbox" value="Podcast Videos" /> <span class="check-label">Podcast Videos</span></span>
+        <span class="inline-check"><input type="checkbox" value="Other" /> <span class="check-label">Other</span></span>
+      </div>
+      <div id="videoTypesError" class="error-message"></div>
+    </div>
+
+    <div class="field-group">
+      <label>How many videos can you edit per week?</label>
+      <div class="card-grid" id="weeklyGroup">
+        <div class="card-option" data-value="1–5">1–5</div>
+        <div class="card-option" data-value="5–10">5–10</div>
+        <div class="card-option" data-value="10–20">10–20</div>
+        <div class="card-option" data-value="20+">20+</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>When can you start?</label>
+      <div class="card-grid" id="startGroup">
+        <div class="card-option" data-value="Immediately">Immediately</div>
+        <div class="card-option" data-value="Within 3 Days">Within 3 Days</div>
+        <div class="card-option" data-value="Within 1 Week">Within 1 Week</div>
+        <div class="card-option" data-value="Other">Other</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Tell us anything else about yourself <span class="optional-tag">(optional)</span></label>
+      <textarea id="aboutYou" placeholder="Write anything you would like us to know..."></textarea>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-secondary" id="backToPage2">← Back</button>
+      <button class="btn btn-primary btn-large" id="submitApplication">Submit Application →</button>
+    </div>
+
+    <div class="footer-links">
+      <a data-info="about">About Us</a>
+      <a data-info="privacy">Privacy Policy</a>
+      <a data-info="terms">Terms &amp; Conditions</a>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="successPage" class="page hidden success-page">
+    <h2>Application Submitted Successfully! 🎉</h2>
+    <p>Thank you for applying. We have received your information and will review your application.</p>
+    <button class="btn btn-primary" id="doneButton">Done</button>
+
+    <div class="footer-links" style="margin-top:40px;">
+      <a data-info="about">About Us</a>
+      <a data-info="privacy">Privacy Policy</a>
+      <a data-info="terms">Terms &amp; Conditions</a>
+    </div>
+  </div>
+</div>
+
+<!-- INFO OVERLAY -->
+<div id="infoOverlay" class="info-overlay">
+  <div class="info-card">
+    <button class="close-btn" id="closeInfo">✕</button>
+    <div id="infoContent">
+      <h2 id="infoTitle">About Us</h2>
+      <div id="infoBody">
+        <p>We are a creative studio connecting talented video editors with meaningful projects. Our platform is built to streamline the hiring process and help editors showcase their skills.</p>
+        <p>With a focus on quality and collaboration, we’ve helped hundreds of creators find work they love.</p>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    (function() {
-        // ----- helpers -----
-        function getSelectedCardValue(container) {
-            const sel = container.querySelector('.card-option.selected');
-            return sel ? sel.getAttribute('data-value') : null;
+  (function() {
+    // ----- helpers -----
+    function getSelectedCardValue(container) {
+      const sel = container.querySelector('.card-option.selected');
+      return sel ? sel.getAttribute('data-value') : null;
+    }
+
+    function getCheckedCheckboxValues(container) {
+      const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+      return Array.from(checkboxes).map(cb => cb.value);
+    }
+
+    // ----- navigation -----
+    let currentPage = 1;
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const page3 = document.getElementById('page3');
+    const successPage = document.getElementById('successPage');
+
+    function showPage(num) {
+      page1.classList.add('hidden');
+      page2.classList.add('hidden');
+      page3.classList.add('hidden');
+      successPage.classList.add('hidden');
+      if (num === 1) page1.classList.remove('hidden');
+      else if (num === 2) page2.classList.remove('hidden');
+      else if (num === 3) page3.classList.remove('hidden');
+      else if (num === 4) successPage.classList.remove('hidden');
+
+      const steps = document.querySelectorAll('.step-indicator');
+      steps.forEach((el, idx) => {
+        el.classList.toggle('active', idx + 1 === num);
+      });
+      const line1 = document.getElementById('line1');
+      const line2 = document.getElementById('line2');
+      line1.classList.toggle('filled', num >= 2);
+      line2.classList.toggle('filled', num >= 3);
+      currentPage = num;
+    }
+
+    // ----- validations -----
+    function validatePage1() {
+      let valid = true;
+      const name = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      document.getElementById('nameError').textContent = '';
+      document.getElementById('emailError').textContent = '';
+      document.getElementById('whatsappError').textContent = '';
+      if (!name) { document.getElementById('nameError').textContent = 'Full name is required.'; valid = false; }
+      if (!email || !email.includes('@') || !email.includes('.')) { document.getElementById('emailError').textContent = 'Valid email is required.'; valid = false; }
+      return valid;
+    }
+
+    function validatePage2() {
+      let valid = true;
+      const portfolio = document.getElementById('portfolio').value.trim();
+      document.getElementById('portfolioError').textContent = '';
+      document.getElementById('experienceError').textContent = '';
+      document.getElementById('workTypeError').textContent = '';
+      document.getElementById('deviceError').textContent = '';
+      document.getElementById('softwareError').textContent = '';
+
+      if (portfolio && !portfolio.startsWith('http://') && !portfolio.startsWith('https://')) {
+        document.getElementById('portfolioError').textContent = 'Please enter a valid URL (http/https).';
+        valid = false;
+      }
+      if (!getSelectedCardValue(document.getElementById('experienceGroup'))) {
+        document.getElementById('experienceError').textContent = 'Select your experience level.';
+        valid = false;
+      }
+      if (!getSelectedCardValue(document.getElementById('workTypeGroup'))) {
+        document.getElementById('workTypeError').textContent = 'Select work type.';
+        valid = false;
+      }
+      if (!getSelectedCardValue(document.getElementById('deviceGroup'))) {
+        document.getElementById('deviceError').textContent = 'Select editing device.';
+        valid = false;
+      }
+      if (!getSelectedCardValue(document.getElementById('softwareGroup'))) {
+        document.getElementById('softwareError').textContent = 'Select editing software.';
+        valid = false;
+      }
+      return valid;
+    }
+
+    function validatePage3() {
+      const checked = getCheckedCheckboxValues(document.getElementById('videoTypesGroup'));
+      document.getElementById('videoTypesError').textContent = '';
+      if (checked.length === 0) {
+        document.getElementById('videoTypesError').textContent = 'Select at least one video type.';
+        return false;
+      }
+      return true;
+    }
+
+    // ----- card events -----
+    document.querySelectorAll('.card-grid').forEach(grid => {
+      grid.addEventListener('click', (e) => {
+        const card = e.target.closest('.card-option');
+        if (!card) return;
+        const parent = card.closest('.card-grid');
+        const isRadio = parent.id !== 'videoTypesGroup' && parent.id !== 'weeklyGroup' && parent.id !== 'startGroup';
+        if (isRadio) {
+          parent.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
         }
+        card.classList.toggle('selected');
+      });
+    });
 
-        function setCardSelection(container, value) {
-            const options = container.querySelectorAll('.card-option');
-            options.forEach(opt => {
-                opt.classList.toggle('selected', opt.getAttribute('data-value') === value);
-            });
-        }
-
-        function getCheckedCheckboxValues(container) {
-            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
-            return Array.from(checkboxes).map(cb => cb.value);
-        }
-
-        // ----- navigation / state -----
-        let currentPage = 1;
-        const page1 = document.getElementById('page1');
-        const page2 = document.getElementById('page2');
-        const page3 = document.getElementById('page3');
-        const successPage = document.getElementById('successPage');
-
-        function showPage(num) {
-            page1.classList.add('hidden');
-            page2.classList.add('hidden');
-            page3.classList.add('hidden');
-            successPage.classList.add('hidden');
-            if (num === 1) page1.classList.remove('hidden');
-            else if (num === 2) page2.classList.remove('hidden');
-            else if (num === 3) page3.classList.remove('hidden');
-            else if (num === 4) successPage.classList.remove('hidden');
-
-            const steps = document.querySelectorAll('.step-indicator');
-            steps.forEach((el, idx) => {
-                el.classList.toggle('active', idx + 1 === num);
-            });
-            const line1 = document.getElementById('line1');
-            const line2 = document.getElementById('line2');
-            line1.classList.toggle('filled', num >= 2);
-            line2.classList.toggle('filled', num >= 3);
-            currentPage = num;
-        }
-
-        // ----- page1 validation (whatsapp optional) -----
-        function validatePage1() {
-            let valid = true;
-            const name = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-
-            document.getElementById('nameError').textContent = '';
-            document.getElementById('emailError').textContent = '';
-            document.getElementById('whatsappError').textContent = '';
-
-            if (!name) { document.getElementById('nameError').textContent = 'Full name is required.'; valid = false; }
-            if (!email || !email.includes('@') || !email.includes('.')) { document.getElementById('emailError').textContent = 'Valid email is required.'; valid = false; }
-            // whatsapp is optional — no validation
-            return valid;
-        }
-
-        // ----- page2 validation (portfolio optional) -----
-        function validatePage2() {
-            let valid = true;
-            const portfolio = document.getElementById('portfolio').value.trim();
-            document.getElementById('portfolioError').textContent = '';
-            document.getElementById('experienceError').textContent = '';
-            document.getElementById('workTypeError').textContent = '';
-            document.getElementById('deviceError').textContent = '';
-            document.getElementById('softwareError').textContent = '';
-
-            // portfolio optional: only validate if filled
-            if (portfolio && !portfolio.startsWith('http://') && !portfolio.startsWith('https://')) {
-                document.getElementById('portfolioError').textContent = 'Please enter a valid URL (http/https).';
-                valid = false;
-            }
-
-            const exp = getSelectedCardValue(document.getElementById('experienceGroup'));
-            if (!exp) { document.getElementById('experienceError').textContent = 'Select your experience level.'; valid = false; }
-
-            const work = getSelectedCardValue(document.getElementById('workTypeGroup'));
-            if (!work) { document.getElementById('workTypeError').textContent = 'Select work type.'; valid = false; }
-
-            const device = getSelectedCardValue(document.getElementById('deviceGroup'));
-            if (!device) { document.getElementById('deviceError').textContent = 'Select editing device.'; valid = false; }
-
-            const software = getSelectedCardValue(document.getElementById('softwareGroup'));
-            if (!software) { document.getElementById('softwareError').textContent = 'Select editing software.'; valid = false; }
-
-            return valid;
-        }
-
-        // ----- page3 validation (video types required) -----
-        function validatePage3() {
-            const checked = getCheckedCheckboxValues(document.getElementById('videoTypesGroup'));
-            document.getElementById('videoTypesError').textContent = '';
-            if (checked.length === 0) {
-                document.getElementById('videoTypesError').textContent = 'Select at least one video type.';
-                return false;
-            }
-            return true;
-        }
-
-        // ----- card selection events -----
-        document.querySelectorAll('.card-grid').forEach(grid => {
-            grid.addEventListener('click', (e) => {
-                const card = e.target.closest('.card-option');
-                if (!card) return;
-                const parent = card.closest('.card-grid');
-                const isRadio = parent.id !== 'videoTypesGroup' && parent.id !== 'weeklyGroup' && parent.id !== 'startGroup';
-                if (isRadio) {
-                    parent.querySelectorAll('.card-option').forEach(c => c.classList.remove('selected'));
-                }
-                card.classList.toggle('selected');
-            });
+    document.querySelectorAll('.inline-check').forEach(el => {
+      const cb = el.querySelector('input[type="checkbox"]');
+      if (cb) {
+        cb.addEventListener('change', () => {
+          el.classList.toggle('selected', cb.checked);
         });
+        if (cb.checked) el.classList.add('selected');
+      }
+    });
 
-        document.querySelectorAll('.inline-check').forEach(el => {
-            const cb = el.querySelector('input[type="checkbox"]');
-            if (cb) {
-                cb.addEventListener('change', () => {
-                    el.classList.toggle('selected', cb.checked);
-                });
-                if (cb.checked) el.classList.add('selected');
-            }
-        });
+    // ----- navigation buttons -----
+    document.getElementById('toPage2').addEventListener('click', () => { if (validatePage1()) showPage(2); });
+    document.getElementById('backToPage1').addEventListener('click', () => showPage(1));
+    document.getElementById('toPage3').addEventListener('click', () => { if (validatePage2()) showPage(3); });
+    document.getElementById('backToPage2').addEventListener('click', () => showPage(2));
+    document.getElementById('submitApplication').addEventListener('click', () => { if (validatePage3()) showPage(4); });
+    document.getElementById('doneButton').addEventListener('click', () => {
+      showPage(1);
+      document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea').forEach(el => el.value = '');
+      document.querySelectorAll('.card-option.selected').forEach(el => el.classList.remove('selected'));
+      document.querySelectorAll('.inline-check.selected').forEach(el => el.classList.remove('selected'));
+      document.querySelectorAll('.inline-check input[type="checkbox"]:checked').forEach(cb => cb.checked = false);
+      document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    });
 
-        // ----- navigation buttons -----
-        document.getElementById('toPage2').addEventListener('click', () => {
-            if (validatePage1()) showPage(2);
-        });
+    // Enter key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const active = document.activeElement;
+        if (active && active.closest('#page1')) document.getElementById('toPage2').click();
+        else if (active && active.closest('#page2')) document.getElementById('toPage3').click();
+        else if (active && active.closest('#page3')) document.getElementById('submitApplication').click();
+      }
+    });
 
-        document.getElementById('backToPage1').addEventListener('click', () => showPage(1));
+    // ----- INFO OVERLAY -----
+    const overlay = document.getElementById('infoOverlay');
+    const closeBtn = document.getElementById('closeInfo');
+    const infoTitle = document.getElementById('infoTitle');
+    const infoBody = document.getElementById('infoBody');
 
-        document.getElementById('toPage3').addEventListener('click', () => {
-            if (validatePage2()) showPage(3);
-        });
+    const infoData = {
+      about: {
+        title: 'About Us',
+        body: `<p>We are a creative studio connecting talented video editors with meaningful projects. Our platform is built to streamline the hiring process and help editors showcase their skills.</p>
+               <p>With a focus on quality and collaboration, we’ve helped hundreds of creators find work they love.</p>`
+      },
+      privacy: {
+        title: 'Privacy Policy',
+        body: `<p>We respect your privacy. Any personal information you provide, including your name, email, and portfolio, is used solely for the purpose of evaluating your application.</p>
+               <p>We do not share your data with third parties without your explicit consent. You may request deletion of your data at any time.</p>`
+      },
+      terms: {
+        title: 'Terms & Conditions',
+        body: `<p>By submitting this application, you confirm that all information provided is accurate and complete. You agree to our use of your data for application review.</p>
+               <p>We reserve the right to contact you regarding your application. All decisions are final and at our discretion.</p>`
+      }
+    };
 
-        document.getElementById('backToPage2').addEventListener('click', () => showPage(2));
+    function openInfo(type) {
+      const data = infoData[type];
+      if (!data) return;
+      infoTitle.textContent = data.title;
+      infoBody.innerHTML = data.body;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
 
-        document.getElementById('submitApplication').addEventListener('click', () => {
-            if (validatePage3()) {
-                showPage(4);
-            }
-        });
+    function closeInfo() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
 
-        document.getElementById('doneButton').addEventListener('click', () => {
-            showPage(1);
-            document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea').forEach(el => el.value = '');
-            document.querySelectorAll('.card-option.selected').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.inline-check.selected').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.inline-check input[type="checkbox"]:checked').forEach(cb => cb.checked = false);
-            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
-        });
+    // click on footer links
+    document.querySelectorAll('.footer-links a[data-info]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const type = link.getAttribute('data-info');
+        openInfo(type);
+      });
+    });
 
-        // Enter key support
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const active = document.activeElement;
-                if (active && active.closest('#page1')) {
-                    document.getElementById('toPage2').click();
-                } else if (active && active.closest('#page2')) {
-                    document.getElementById('toPage3').click();
-                } else if (active && active.closest('#page3')) {
-                    document.getElementById('submitApplication').click();
-                }
-            }
-        });
+    closeBtn.addEventListener('click', closeInfo);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeInfo();
+    });
 
-        showPage(1);
-    })();
+    // close with Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) closeInfo();
+    });
+
+    // init
+    showPage(1);
+  })();
 </script>
 </body>
 </html>
