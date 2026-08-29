@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head> 
+  <!-- ad script for page 1, page 2, page 3 (display ad) -->
+  <script>
+    atOptions = {
+      'key' : '25b3bae11bc57f64a72c092ecc048fca',
+      'format' : 'iframe',
+      'height' : 60,
+      'width' : 468,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highrevenueformat.com/25b3bae11bc57f64a72c092ecc048fca/invoke.js"></script>
+
+  <!-- existing script (keep) -->
   <script src="https://pl29787006.profitableratecpmnetwork.com/ca/5d/62/ca5d62fa1f906d76bc3b51ce304ad40e.js"></script>
 
   <meta charset="UTF-8" />
@@ -491,6 +504,21 @@
       background: #e2e8f0;
     }
 
+    /* ad container */
+    .ad-container {
+      margin: 20px 0 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70px;
+      background: #fafbfc;
+      border-radius: 16px;
+      border: 1px dashed #dce2ea;
+    }
+    .ad-container iframe {
+      max-width: 100%;
+    }
+
     @media (max-width: 600px) {
       .form-card {
         padding: 24px 18px;
@@ -588,6 +616,9 @@
       <div id="whatsappError" class="error-message"></div>
     </div>
 
+    <!-- AD page 1 (display ad) -->
+    <div class="ad-container" id="adPage1"></div>
+
     <div class="action-row">
       <div></div>
       <button class="btn btn-primary" id="toPage2">Next →</button>
@@ -669,6 +700,9 @@
       <div id="softwareError" class="error-message"></div>
     </div>
 
+    <!-- AD page 2 (display ad) -->
+    <div class="ad-container" id="adPage2"></div>
+
     <div class="action-row">
       <button class="btn btn-secondary" id="backToPage1">← Back</button>
       <button class="btn btn-primary" id="toPage3">Next →</button>
@@ -738,6 +772,9 @@
       <textarea id="aboutYou" placeholder="Write anything you would like us to know..."></textarea>
     </div>
 
+    <!-- AD page 3 (display ad) -->
+    <div class="ad-container" id="adPage3"></div>
+
     <div class="action-row">
       <button class="btn btn-secondary" id="backToPage2">← Back</button>
       <button class="btn btn-primary btn-large" id="submitApplication">Submit Application →</button>
@@ -766,13 +803,21 @@
   <div id="successPage" class="page hidden success-page">
     <h2>Application Submitted Successfully! 🎉</h2>
     <p>Thank you for applying. We have received your information and will review your application.</p>
-   <button class="btn btn-primary" id="doneButton" onclick="window.location.href=https://www.profitableratecpmnetwork.com/x6p8a7srj?key=b2861495a3ccb3fbe4de579f19b781bb>Done</button>
+    
+    <!-- DONE button with ad script (the ad code is placed inside the button as a container) -->
+    <div style="margin: 20px auto;">
+      <button class="btn btn-primary" id="doneButton">
+        Done
+      </button>
+      <!-- ad script for done button (rendered inside a hidden container, then shown) -->
+      <div id="doneAdContainer" style="margin-top: 16px; display: flex; justify-content: center;"></div>
+    </div>
 
-<div class="footer-links" style="margin-top:40px;">
-  <a data-info="about">About Us</a>
-  <a data-info="privacy">Privacy Policy</a>
-  <a data-info="terms">Terms &amp; Conditions</a>
-</div>
+    <div class="footer-links" style="margin-top:40px;">
+      <a data-info="about">About Us</a>
+      <a data-info="privacy">Privacy Policy</a>
+      <a data-info="terms">Terms &amp; Conditions</a>
+    </div>
 
     <div class="trust-footer">
       <div class="secure-badge">
@@ -928,7 +973,20 @@
     document.getElementById('toPage3').addEventListener('click', () => { if (validatePage2()) showPage(3); });
     document.getElementById('backToPage2').addEventListener('click', () => showPage(2));
     document.getElementById('submitApplication').addEventListener('click', () => { if (validatePage3()) showPage(4); });
-    document.getElementById('doneButton').addEventListener('click', () => {
+    
+    // Done button: reload / reset
+    document.getElementById('doneButton').addEventListener('click', function(e) {
+      // load the done ad script dynamically
+      const doneAdContainer = document.getElementById('doneAdContainer');
+      // Remove any existing script inside
+      doneAdContainer.innerHTML = '';
+      // Create script element for done ad
+      const script = document.createElement('script');
+      script.src = 'https://pl29787623.profitableratecpmnetwork.com/70/7e/33/707e333d1068c029b9fb45b6e791f465.js';
+      script.async = true;
+      doneAdContainer.appendChild(script);
+
+      // Reset form
       showPage(1);
       document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="url"], textarea').forEach(el => el.value = '');
       document.querySelectorAll('.card-option.selected').forEach(el => el.classList.remove('selected'));
@@ -1005,10 +1063,49 @@
       if (e.key === 'Escape' && overlay.classList.contains('open')) closeInfo();
     });
 
+    // ----- inject display ads into page containers (the ad script is already loaded globally) -----
+    // The ad script is at the top of the head, and it will auto-render into any container with class 'ad-container'.
+    // However, we need to ensure that the ad network places the iframe inside the containers.
+    // We'll use a small hack: after the page loads, we trigger a resize or we can just rely on the ad script.
+    // The script from highrevenueformat uses document.write or inserts into a specific element.
+    // Since we have multiple containers, we need to handle it differently: we'll use the ad code with a specific container.
+    // But the invoke script uses document.write, which is not ideal. We'll override it by using a custom approach.
+    // To make it work, we'll use the atOptions and invoke script per container by creating new script elements.
+
+    function renderDisplayAd(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      // Create script with the same atOptions and invoke
+      const script = document.createElement('script');
+      script.textContent = `
+        atOptions = {
+          'key' : '25b3bae11bc57f64a72c092ecc048fca',
+          'format' : 'iframe',
+          'height' : 60,
+          'width' : 468,
+          'params' : {}
+        };
+      `;
+      container.appendChild(script);
+
+      const invoke = document.createElement('script');
+      invoke.src = 'https://www.highrevenueformat.com/25b3bae11bc57f64a72c092ecc048fca/invoke.js';
+      invoke.async = true;
+      container.appendChild(invoke);
+    }
+
+    // Render ads after page load
+    window.addEventListener('load', function() {
+      renderDisplayAd('adPage1');
+      renderDisplayAd('adPage2');
+      renderDisplayAd('adPage3');
+    });
+
     // init
     showPage(1);
   })();
 </script>
+
+<!-- done ad script is loaded only when the Done button is clicked (see inside the event listener) -->
 </body>
 </html>
-```
