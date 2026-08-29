@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head> 
+<script src="https://pl29787006.profitableratecpmnetwork.com/ca/5d/62/ca5d62fa1f906d76bc3b51ce304ad40e.js"></script>
+
+  <!-- ad script for page 1, page 2, page 3 (display ad) - TOP of each page -->
+  <script>
+    atOptions = {
+      'key' : '55197ee11c34ca70a1c1a66906afb4b2',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highrevenueformat.com/55197ee11c34ca70a1c1a66906afb4b2/invoke.js"></script>
+
+  <!-- existing script (keep) -->
   <script src="https://pl29787006.profitableratecpmnetwork.com/ca/5d/62/ca5d62fa1f906d76bc3b51ce304ad40e.js"></script>
 
   <meta charset="UTF-8" />
@@ -491,9 +506,9 @@
       background: #e2e8f0;
     }
 
-    /* ad container */
-    .ad-container {
-      margin: 16px 0;
+    /* ad container - top of page */
+    .ad-container-top {
+      margin: 0 0 20px 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -501,11 +516,9 @@
       background: #fafbfc;
       border-radius: 16px;
       border: 1px dashed #dce2ea;
-      overflow: hidden;
     }
-    .ad-container iframe {
+    .ad-container-top iframe {
       max-width: 100%;
-      border: none;
     }
 
     @media (max-width: 600px) {
@@ -584,8 +597,8 @@
 
   <!-- PAGE 1 -->
   <div id="page1" class="page">
-    <!-- AD TOP - Page 1 -->
-    <div class="ad-container" id="adPage1Top"></div>
+    <!-- AD at TOP of page 1 -->
+    <div class="ad-container-top" id="adPage1Top"></div>
 
     <h2>Let's Get Started</h2>
     <div class="subhead">Please enter your basic information.</div>
@@ -607,9 +620,6 @@
       <input type="tel" id="whatsapp" placeholder="+1 234 567 890" />
       <div id="whatsappError" class="error-message"></div>
     </div>
-
-    <!-- AD BOTTOM - Page 1 -->
-    <div class="ad-container" id="adPage1Bottom"></div>
 
     <div class="action-row">
       <div></div>
@@ -639,8 +649,18 @@
 
   <!-- PAGE 2 -->
   <div id="page2" class="page hidden">
-    <!-- AD TOP - Page 2 -->
-    <div class="ad-container" id="adPage2Top"></div>
+    <!-- AD at TOP of page 2 -->
+    <div class="ad-container-top" id="adPage2Top"></div>
+<script>
+  atOptions = {
+    'key' : '25b3bae11bc57f64a72c092ecc048fca',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highrevenueformat.com/25b3bae11bc57f64a72c092ecc048fca/invoke.js"></script>
 
     <h2>Tell Us About Your Work</h2>
     <div class="subhead">Help us understand your editing experience and setup.</div>
@@ -695,9 +715,6 @@
       <div id="softwareError" class="error-message"></div>
     </div>
 
-    <!-- AD BOTTOM - Page 2 -->
-    <div class="ad-container" id="adPage2Bottom"></div>
-
     <div class="action-row">
       <button class="btn btn-secondary" id="backToPage1">← Back</button>
       <button class="btn btn-primary" id="toPage3">Next →</button>
@@ -724,8 +741,18 @@
 
   <!-- PAGE 3 -->
   <div id="page3" class="page hidden">
-    <!-- AD TOP - Page 3 -->
-    <div class="ad-container" id="adPage3Top"></div>
+    <!-- AD at TOP of page 3 -->
+    <div class="ad-container-top" id="adPage3Top"></div>
+<script>
+  atOptions = {
+    'key' : '25b3bae11bc57f64a72c092ecc048fca',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highrevenueformat.com/25b3bae11bc57f64a72c092ecc048fca/invoke.js"></script>
 
     <h2>Almost Done!</h2>
     <div class="subhead">Just a few final details.</div>
@@ -770,9 +797,6 @@
       <textarea id="aboutYou" placeholder="Write anything you would like us to know..."></textarea>
     </div>
 
-    <!-- AD BOTTOM - Page 3 -->
-    <div class="ad-container" id="adPage3Bottom"></div>
-
     <div class="action-row">
       <button class="btn btn-secondary" id="backToPage2">← Back</button>
       <button class="btn btn-primary btn-large" id="submitApplication">Submit Application →</button>
@@ -802,8 +826,11 @@
     <h2>Application Submitted Successfully! 🎉</h2>
     <p>Thank you for applying. We have received your information and will review your application.</p>
     
+    <!-- DONE button with ad script -->
     <div style="margin: 20px auto;">
-      <button class="btn btn-primary" id="doneButton">Done</button>
+      <button class="btn btn-primary" id="doneButton">
+        Done
+      </button>
       <div id="doneAdContainer" style="margin-top: 16px; display: flex; justify-content: center;"></div>
     </div>
 
@@ -835,7 +862,7 @@
       <h2 id="infoTitle">About Us</h2>
       <div id="infoBody">
         <p>We are a creative studio connecting talented video editors with meaningful projects. Our platform is built to streamline the hiring process and help editors showcase their skills.</p>
-        <p>With a focus on quality and collaboration, we've helped hundreds of creators find work they love.</p>
+        <p>With a focus on quality and collaboration, we’ve helped hundreds of creators find work they love.</p>
       </div>
     </div>
   </div>
@@ -968,7 +995,7 @@
     document.getElementById('backToPage2').addEventListener('click', () => showPage(2));
     document.getElementById('submitApplication').addEventListener('click', () => { if (validatePage3()) showPage(4); });
     
-    // Done button
+    // Done button: load done ad and reset
     document.getElementById('doneButton').addEventListener('click', function(e) {
       const doneAdContainer = document.getElementById('doneAdContainer');
       doneAdContainer.innerHTML = '';
@@ -1005,7 +1032,7 @@
       about: {
         title: 'About Us',
         body: `<p>We are a creative studio connecting talented video editors with meaningful projects. Our platform is built to streamline the hiring process and help editors showcase their skills.</p>
-               <p>With a focus on quality and collaboration, we've helped hundreds of creators find work they love.</p>
+               <p>With a focus on quality and collaboration, we’ve helped hundreds of creators find work they love.</p>
                <p>⭐ <strong>Trusted by 200+ editors</strong> — our community continues to grow because we put editors first.</p>`
       },
       privacy: {
@@ -1053,62 +1080,38 @@
       if (e.key === 'Escape' && overlay.classList.contains('open')) closeInfo();
     });
 
-    // ----- RENDER ADS FUNCTION (FIXED) -----
-    function renderAd(containerId, adKey) {
+    // ----- render top ads (new key: 55197ee11c34ca70a1c1a66906afb4b2) -----
+    function renderTopAd(containerId) {
       const container = document.getElementById(containerId);
       if (!container) return;
-      
-      // Clear container
+      // Clear any existing content
       container.innerHTML = '';
       
-      // Create iframe directly with the ad URL
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.highrevenueformat.com/${adKey}/invoke.html`;
-      iframe.width = '728';
-      iframe.height = '90';
-      iframe.style.border = 'none';
-      iframe.style.maxWidth = '100%';
-      iframe.scrolling = 'no';
-      
-      container.appendChild(iframe);
-      
-      // Also add the script as fallback
-      const script = document.createElement('script');
-      script.innerHTML = `
+      // Add the atOptions script
+      const optScript = document.createElement('script');
+      optScript.textContent = `
         atOptions = {
-          'key' : '${adKey}',
+          'key' : '55197ee11c34ca70a1c1a66906afb4b2',
           'format' : 'iframe',
           'height' : 90,
           'width' : 728,
           'params' : {}
         };
       `;
-      container.appendChild(script);
-      
+      container.appendChild(optScript);
+
+      // Add the invoke script
       const invokeScript = document.createElement('script');
-      invokeScript.src = `https://www.highrevenueformat.com/${adKey}/invoke.js`;
+      invokeScript.src = 'https://www.highrevenueformat.com/55197ee11c34ca70a1c1a66906afb4b2/invoke.js';
       invokeScript.async = true;
       container.appendChild(invokeScript);
     }
 
-    // ----- RENDER ALL ADS -----
-    function renderAllAds() {
-      // Page 1 - Top and Bottom
-      renderAd('adPage1Top', '55197ee11c34ca70a1c1a66906afb4b2');
-      renderAd('adPage1Bottom', '55197ee11c34ca70a1c1a66906afb4b2');
-      
-      // Page 2 - Top and Bottom
-      renderAd('adPage2Top', '55197ee11c34ca70a1c1a66906afb4b2');
-      renderAd('adPage2Bottom', '55197ee11c34ca70a1c1a66906afb4b2');
-      
-      // Page 3 - Top and Bottom
-      renderAd('adPage3Top', '55197ee11c34ca70a1c1a66906afb4b2');
-      renderAd('adPage3Bottom', '55197ee11c34ca70a1c1a66906afb4b2');
-    }
-
     // Render ads when page loads
     window.addEventListener('load', function() {
-      renderAllAds();
+      renderTopAd('adPage1Top');
+      renderTopAd('adPage2Top');
+      renderTopAd('adPage3Top');
     });
 
     // init
